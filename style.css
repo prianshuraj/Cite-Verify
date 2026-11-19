@@ -113,7 +113,7 @@ main { width: min(1200px, 100%); margin: 0 auto; padding: 0 30px; }
   margin: 0;
   color: #20342f;
   font-family: var(--display-font);
-  font-size: clamp(42px, 5.4vw, 66px);
+  font-size: clamp(42px, 5.4vw, 63px);
   font-weight: 400;
   letter-spacing: -.04em;
   line-height: 1.02;
