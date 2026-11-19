@@ -1,0 +1,977 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veritas — Research &amp; Claim Verification Portal</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'accent': '#B45309',
+        'verdict-true': '#047857',
+        'verdict-false': '#B91C1C',
+        'verdict-uncertain': '#92400E',
+        'verdict-science': '#3730A3',
+        'light-primary': '#0B132B',
+        'light-on-primary': '#FFFFFF',
+        'light-surface': '#FAFAF7',
+        'light-surface-container': '#F0EFEB',
+        'light-surface-container-high': '#E5E3DC',
+        'light-on-surface': '#111827',
+        'light-on-surface-variant': '#374151',
+        'light-outline': '#9CA3AF',
+        'dark-primary': '#E0E7FF',
+        'dark-on-primary': '#0F172A',
+        'dark-surface': '#0B0F19',
+        'dark-surface-container': '#111827',
+        'dark-surface-container-high': '#1F2937',
+        'dark-on-surface': '#F3F4F6',
+        'dark-on-surface-variant': '#9CA3AF',
+        'dark-outline': '#4B5563',
+      },
+      borderRadius: {
+        'sm': '4px',
+        'DEFAULT': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '20px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '64px',
+        'page-margin': '32px',
+      },
+      fontFamily: {
+        'display': ['"Playfair"', 'sans-serif'],
+        'headline': ['"Playfair"', 'sans-serif'],
+        'body': ['"Poppins"', 'sans-serif'],
+        'label': ['"Poppins"', 'sans-serif'],
+        'mono': ['"Source Code Pro"', 'monospace'],
+      },
+      fontSize: {
+        'display-lg': ['56px', { lineHeight: '64px', letterSpacing: '-1.2px', fontWeight: '700' }],
+        'display-lg-mobile': ['32px', { lineHeight: '38px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg': ['36px', { lineHeight: '44px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'headline-lg-mobile': ['26px', { lineHeight: '32px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-md': ['24px', { lineHeight: '32px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'headline-sm': ['18px', { lineHeight: '26px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'body-lg': ['17px', { lineHeight: '28px', fontWeight: '400' }],
+        'body-md': ['14px', { lineHeight: '22px', fontWeight: '400' }],
+        'body-sm': ['12px', { lineHeight: '18px', fontWeight: '400' }],
+        'label-lg': ['14px', { lineHeight: '20px', fontWeight: '600' }],
+        'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.5px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '150ms',
+        'surface-enter': '350ms',
+        'surface-exit': '200ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        'surface-enter': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'surface-exit': 'cubic-bezier(0.4, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,wght@0,500;0,600;0,700;0,900;1,400;1,600&amp;family=Poppins:wght@300;400;500;600;700&amp;family=Source+Code+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>
+    .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      line-height: 1 !important;
+      box-sizing: content-box;
+      overflow: hidden;
+      white-space: nowrap;
+      direction: ltr;
+      vertical-align: middle;
+    }
+    
+    .ink-selection::selection {
+      background-color: #0B132B;
+      color: #FAFAF7;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: 200%;
+      animation: marquee 26s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    #scroll-indicator {
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.05s ease-out;
+    }
+
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-item.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .parchment-pattern {
+      background-image: radial-gradient(rgba(11, 19, 43, 0.04) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+  </style>
+</head>
+<body class="bg-light-surface text-light-on-surface font-body ink-selection antialiased selection:bg-light-primary selection:text-light-on-primary min-h-[1024px]" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+  <!-- Sticky Top Global Reading & Verification Telemetry -->
+  <aside aria-label="Reading progress" class="fixed top-0 left-0 right-0 h-1 z-50 bg-light-surface-container">
+    <div id="scroll-indicator" class="h-full bg-verdict-science"></div>
+  </aside>
+
+  <!-- Editorial Top Bar -->
+  <header class="border-b border-light-outline/70 bg-light-surface/95 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="#" class="flex items-center gap-2 text-light-primary group">
+          <span class="w-8 h-8 rounded-full bg-light-primary text-light-on-primary flex items-center justify-center font-headline font-bold text-headline-sm group-hover:rotate-12 transition-transform duration-state-change">V</span>
+          <span class="font-headline font-bold text-headline-sm tracking-tight">VERITAS</span>
+        </a>
+        <div class="hidden md:flex items-center gap-2 pl-4 border-l border-light-outline text-body-sm text-light-on-surface-variant font-mono">
+          <span class="inline-block w-2 h-2 rounded-full bg-verdict-true animate-pulse"></span>
+          <span>42,819,402 CITATIONS INDEXED</span>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-8 text-label-lg font-label text-light-on-surface-variant" aria-label="Main Navigation">
+        <a href="#live-engine" class="hover:text-light-primary transition-colors text-light-primary font-semibold flex items-center gap-1">
+          <span class="material-symbols-outlined text-base">bolt</span>
+          <span>Verification Engine</span>
+        </a>
+        <a href="#featured-dossiers" class="hover:text-light-primary transition-colors">Investigations</a>
+        <a href="#claim-registry" class="hover:text-light-primary transition-colors">Claim Registry</a>
+        <a href="#methodology" class="hover:text-light-primary transition-colors">Methodology</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="openClaimDrawer()" class="inline-flex items-center gap-2 px-4 py-2 rounded-DEFAULT bg-light-surface-container border border-light-outline hover:border-light-primary text-light-on-surface font-label text-label-sm transition-colors cursor-pointer whitespace-nowrap">
+          <span class="material-symbols-outlined text-base">upload_file</span>
+          <span>Submit Claim / DOI</span>
+        </button>
+        <button type="button" class="inline-flex items-center justify-center px-4 py-2 rounded-DEFAULT bg-light-primary text-light-on-primary font-label text-label-sm hover:opacity-90 transition-opacity cursor-pointer shadow-sm whitespace-nowrap">
+          <span>Peer Reviewer Log In</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Verified Claims Ticker Bar -->
+  <div class="border-b border-light-outline bg-light-surface-container-high/40 overflow-hidden py-2.5">
+    <div class="max-w-7xl mx-auto px-6 flex items-center">
+      <div class="flex-shrink-0 flex items-center gap-2 pr-6 border-r border-light-outline text-label-sm font-label text-light-on-surface-variant uppercase tracking-wider">
+        <span class="material-symbols-outlined text-base text-verdict-science">stream</span>
+        <span>Live Telemetry</span>
+      </div>
+      <div class="overflow-hidden relative w-full pl-6">
+        <div class="animate-marquee flex items-center gap-12 font-mono text-mono-sm text-light-on-surface">
+          <span class="inline-flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-verdict-true"></span>
+            <strong>PMID:3829104</strong> Intermittent Fasting Autophagy: <span class="text-verdict-true font-bold">VERIFIED TRUE (98.4%)</span>
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-verdict-false"></span>
+            <strong>CLAIM-8841</strong> Blue Salt Dye Myth: <span class="text-verdict-false font-bold">DEBUNKED (0% Synthetic)</span>
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-verdict-uncertain"></span>
+            <strong>ARXIV:2403.118</strong> Quantum Battery Density: <span class="text-verdict-uncertain font-bold">REPLICATING (n=2/5 Labs)</span>
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-verdict-true"></span>
+            <strong>LANCET-2024-9</strong> SGLT2 Renal Longevity Impact: <span class="text-verdict-true font-bold">CORROBORATED (p &lt; 0.001)</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="relative parchment-pattern">
+    <!-- Hero Section: Editorial Statement & Interactive Verification Engine -->
+    <section id="live-engine" class="py-16 md:py-24 border-b border-light-outline/70">
+      <div class="max-w-5xl mx-auto px-6 text-center">
+        
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-light-surface-container border border-light-outline mb-6">
+          <span class="font-mono text-mono-sm text-verdict-science font-semibold">INVESTIGATIVE PEER-REVIEW INTELLIGENCE</span>
+          <span class="text-light-on-surface-variant font-mono">•</span>
+          <span class="font-label text-label-sm text-light-on-surface-variant">VOL. XXIV ISSUE 08</span>
+        </div>
+
+        <h1 class="font-headline text-display-lg-mobile md:text-display-lg text-light-primary tracking-tight mb-6 max-w-4xl mx-auto text-balance">
+          The Dispassionate Architecture of Truth.
+        </h1>
+
+        <p class="font-body text-body-lg text-light-on-surface-variant max-w-2xl mx-auto mb-10 text-pretty">
+          Cross-examining viral assertions, preprint biomedical breakthroughs, and market claims against 42 million peer-reviewed studies and primary data repositories in real-time.
+        </p>
+
+        <!-- Interactive Verification Workbench Form -->
+        <div class="bg-light-surface-container rounded-xl border border-light-outline p-6 md:p-8 shadow-xl max-w-3xl mx-auto text-left relative overflow-hidden transition-all duration-surface-enter">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-light-outline/60 text-label-sm font-label text-light-on-surface-variant">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-base text-light-primary">travel_explore</span>
+              <span class="font-semibold text-light-primary">Deep Verification Search</span>
+            </div>
+            <div class="flex items-center gap-3 font-mono text-mono-sm">
+              <span>PubMed</span>
+              <span>•</span>
+              <span>Cochrane</span>
+              <span>•</span>
+              <span>arXiv</span>
+              <span>•</span>
+              <span>SEC 10-K</span>
+            </div>
+          </div>
+
+          <form id="verifyForm" onsubmit="handleVerification(event)" class="space-y-4">
+            <div class="relative">
+              <textarea id="claimInput" rows="2" placeholder="Paste any scientific claim, tweet quote, DOI, or research assertion to verify..." class="w-full p-4 rounded-lg bg-light-surface border border-light-outline font-body text-body-md text-light-on-surface focus:outline-none focus:ring-2 focus:ring-light-primary focus:border-transparent placeholder:text-light-on-surface-variant/50 resize-none">Consuming 3 cups of dark roast coffee daily reduces cellular telomere shortening rates by 18% in humans.</textarea>
+            </div>
+
+            <!-- Fast sample pills -->
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="font-label text-label-sm text-light-on-surface-variant">Try testing:</span>
+              <button type="button" onclick="setQuery(&#39;Consuming 3 cups of dark roast coffee daily reduces cellular telomere shortening rates by 18% in humans.&#39;)" class="px-2.5 py-1 rounded-full bg-light-surface hover:bg-light-surface-container-high border border-light-outline font-label text-label-sm text-light-on-surface transition-colors cursor-pointer">
+                ☕ Coffee &amp; Telomeres
+              </button>
+              <button type="button" onclick="setQuery(&#39;Antarctic Thwaites Glacier melt velocity increased by 40% between 2021 and 2024.&#39;)" class="px-2.5 py-1 rounded-full bg-light-surface hover:bg-light-surface-container-high border border-light-outline font-label text-label-sm text-light-on-surface transition-colors cursor-pointer">
+                🧊 Thwaites Glacier Velocity
+              </button>
+              <button type="button" onclick="setQuery(&#39;Transformer LLMs exhibit linear emergent reasoning capabilities independent of training compute.&#39;)" class="px-2.5 py-1 rounded-full bg-light-surface hover:bg-light-surface-container-high border border-light-outline font-label text-label-sm text-light-on-surface transition-colors cursor-pointer">
+                🧠 LLM Emergence Claim
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-light-outline/60">
+              <div class="flex items-center gap-4 text-body-sm text-light-on-surface-variant">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" checked class="rounded border-light-outline text-light-primary focus:ring-light-primary">
+                  <span class="font-label text-label-sm">Include Pre-prints</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" checked class="rounded border-light-outline text-light-primary focus:ring-light-primary">
+                  <span class="font-label text-label-sm">Inspect Conflict of Interest</span>
+                </label>
+              </div>
+
+              <button type="submit" id="verifyBtn" class="inline-flex items-center gap-2 px-6 py-3 rounded-DEFAULT bg-light-primary text-light-on-primary font-label text-label-lg hover:opacity-95 active:scale-95 transition-all shadow-md cursor-pointer">
+                <span class="material-symbols-outlined text-base">verified_user</span>
+                <span id="btnText">Execute Multi-Source Audit</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Interactive Live Audit Progress Panel -->
+          <div id="auditResultPanel" class="mt-6 pt-6 border-t border-light-outline space-y-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-light-surface text-verdict-uncertain font-label text-label-sm border border-verdict-uncertain shadow-sm mb-2">
+                  <span class="material-symbols-outlined text-base">sentiment_neutral</span>
+                  <span class="font-bold">VERDICT: MISLEADING EXTRAPOLATION</span>
+                </div>
+                <h3 class="font-headline text-headline-sm text-light-on-surface">
+                  Correlation Confused with Causation; Human Trials Found Null Impact
+                </h3>
+              </div>
+              <div class="text-right">
+                <div class="font-mono text-headline-md font-bold text-verdict-uncertain" id="confidenceMeter">71.2%</div>
+                <div class="font-mono text-mono-sm text-light-on-surface-variant">Consensus Confidence</div>
+              </div>
+            </div>
+
+            <!-- Breakdown telemetry steps -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+              <div class="p-3 rounded-lg bg-light-surface border border-light-outline">
+                <div class="font-mono text-mono-sm text-light-on-surface-variant">META-ANALYSES (N=6)</div>
+                <div class="font-semibold text-body-sm mt-1 text-light-on-surface">No Significant In-Vivo Length Delta</div>
+                <div class="text-body-sm text-verdict-false mt-1 flex items-center gap-1 font-semibold">
+                  <span class="material-symbols-outlined text-base">close</span> P = 0.28 (Null effect)
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-light-surface border border-light-outline">
+                <div class="font-mono text-mono-sm text-light-on-surface-variant">SAMPLE SOURCE</div>
+                <div class="font-semibold text-body-sm mt-1 text-light-on-surface">Original 2022 Rodent In-Vitro Study</div>
+                <div class="text-body-sm text-verdict-uncertain mt-1 flex items-center gap-1 font-semibold">
+                  <span class="material-symbols-outlined text-base">warning</span> Misapplied rodent cells to humans
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-light-surface border border-light-outline">
+                <div class="font-mono text-mono-sm text-light-on-surface-variant">PEER CONSENSUS</div>
+                <div class="font-semibold text-body-sm mt-1 text-light-on-surface">American Society for Biochemistry</div>
+                <div class="text-body-sm text-verdict-true mt-1 flex items-center gap-1 font-semibold">
+                  <span class="material-symbols-outlined text-base">verified</span> 18 Cross-Replications Registered
+                </div>
+              </div>
+            </div>
+
+            <!-- Expand citation links -->
+            <div class="flex items-center justify-between pt-2 text-body-sm font-label">
+              <span class="text-light-on-surface-variant">34 Citations Audited • Run ID: <code class="font-mono text-mono-sm">VR-8910-TEL</code></span>
+              <a href="#featured-dossiers" class="text-light-primary hover:underline flex items-center gap-1 font-semibold">
+                Download Comprehensive Forensic PDF <span class="material-symbols-outlined text-base">download</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Filter & Archetype Section: Curated Investigations -->
+    <section id="featured-dossiers" class="py-16 md:py-24 border-b border-light-outline/70">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div class="flex flex-col gap-2">
+            <span class="font-mono text-mono-sm text-verdict-science font-semibold tracking-wider uppercase">Editorial Investigation Series</span>
+            <h2 class="font-headline text-headline-lg text-light-primary">
+              High-Impact Verified Claims
+            </h2>
+            <p class="font-body text-body-md text-light-on-surface-variant max-w-xl">
+              Each dossier undergoes exhaustive triple-blind evaluation across raw clinical trial registries, satellite telemetry, and econometric databases.
+            </p>
+          </div>
+
+          <!-- Interactive Domain Filter Buttons -->
+          <div class="flex flex-wrap items-center gap-2 bg-light-surface-container p-1.5 rounded-lg border border-light-outline">
+            <button onclick="filterClaims(&#39;all&#39;, this)" class="filter-btn px-4 py-1.5 rounded-md font-label text-label-sm bg-light-primary text-light-on-primary transition-all">All Domains</button>
+            <button onclick="filterClaims(&#39;clinical&#39;, this)" class="filter-btn px-4 py-1.5 rounded-md font-label text-label-sm text-light-on-surface-variant hover:text-light-on-surface transition-all">Clinical &amp; Health</button>
+            <button onclick="filterClaims(&#39;climate&#39;, this)" class="filter-btn px-4 py-1.5 rounded-md font-label text-label-sm text-light-on-surface-variant hover:text-light-on-surface transition-all">Earth &amp; Climate</button>
+            <button onclick="filterClaims(&#39;ai&#39;, this)" class="filter-btn px-4 py-1.5 rounded-md font-label text-label-sm text-light-on-surface-variant hover:text-light-on-surface transition-all">AI &amp; Compute</button>
+          </div>
+        </div>
+
+        <!-- High-Impact Editorial Grid with Scroll Reveal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+          
+          <!-- Dossier 1: Clinical (True) -->
+          <article data-domain="clinical" class="claim-card reveal-item bg-light-surface-container rounded-xl border border-light-outline overflow-hidden flex flex-col hover:border-light-primary transition-all duration-surface-enter shadow-sm hover:shadow-lg group">
+            <div class="relative h-56 overflow-hidden">
+              <img src="https://lh3.googleusercontent.com/aida/ALJJyrDUi17dsct_88oG41Lkgy7Lzowd-fP88xCQC9RITvgHzv1D1LuFPB5O6xdRypuovLi6HCKxdGrsfhf6ZVqIU5GChw_Jcp4feaVg3_M9dW9jPdNCUhGkVAt-o_kU_0kXrKEBhO6MQJGumgh5UQR8LYDp9cH-YXo_2rH8hsoNZ897HpfKaEc4QbsC8Zd-2ZxodR7oEfmVbA30Y93jdIQx1eWIhU3HdGYhd4671u-GS8GJB_j230M489OCAUSePuaHXiTT" alt="Microscopic Cellular Autophagy Staining" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+              <div class="absolute top-4 left-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-light-surface text-verdict-true font-label text-label-sm border border-verdict-true shadow-sm">
+                  <span class="material-symbols-outlined text-base">verified</span>
+                  <span class="font-bold">VERIFIED TRUE</span>
+                </span>
+              </div>
+              <div class="absolute bottom-3 right-4 font-mono text-mono-sm text-light-on-primary bg-light-primary/90 px-2 py-0.5 rounded">
+                DOI: 10.1038/s41586-024
+              </div>
+            </div>
+
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-body-sm text-light-on-surface-variant font-mono mb-2">
+                  <span>SAMPLE N = 12,450</span>
+                  <span class="text-verdict-true font-bold">99.1% REPLICABILITY</span>
+                </div>
+                <h3 class="font-headline text-headline-sm text-light-on-surface mb-3 group-hover:text-light-primary transition-colors">
+                  Intermittent Fasting Regulates Microglial Autophagy in Longitudinal Human Cohort
+                </h3>
+                <p class="font-body text-body-md text-light-on-surface-variant mb-4">
+                  Multi-center longitudinal trial across 8 research hospitals corroborates significant clearance of neuro-toxic amyloid plaque markers over a 24-month structured regimen.
+                </p>
+              </div>
+
+              <div class="pt-4 border-t border-light-outline/70 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-verdict-science/10 text-verdict-science flex items-center justify-center font-mono text-mono-sm font-bold">14</div>
+                  <span class="font-body text-body-sm text-light-on-surface-variant">Replication studies</span>
+                </div>
+                <button type="button" onclick="openEvidenceModal(&#39;cellular&#39;)" class="font-label text-label-sm text-light-primary flex items-center gap-1 font-semibold hover:underline">
+                  Inspect Evidence <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Dossier 2: Climate (Debunked) -->
+          <article data-domain="climate" class="claim-card reveal-item bg-light-surface-container rounded-xl border border-light-outline overflow-hidden flex flex-col hover:border-light-primary transition-all duration-surface-enter shadow-sm hover:shadow-lg group">
+            <div class="relative h-56 overflow-hidden">
+              <img src="https://lh3.googleusercontent.com/aida/ALJJyrBNL4NqHvc_JQuevhqcpWg85ux98WiI4-8dv_rHUhL7SYFB89WT8ZmQWo_GgmmQPpQEhmWWKCreedgmijZj13EyxU56dsN2vK4gRCMrgpxJjKg6jlo9jmbaGsJNCYifxQn-lKe6GVrN9KsK16CUCKwJgO_PmxUGSp541MNQJi1zGAB4SFRe0xar9G_hARJz-ljsoChzCWccU2jHhhF_g1aQs023eaZUM3xfSt_4RljHCgexsmrt4CTCGt35BcpnYKY" alt="Satellite Synthetic Aperture Radar Ice Crack Data" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+              <div class="absolute top-4 left-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-light-surface text-verdict-false font-label text-label-sm border border-verdict-false shadow-sm">
+                  <span class="material-symbols-outlined text-base">cancel</span>
+                  <span class="font-bold">DEBUNKED FALSE</span>
+                </span>
+              </div>
+              <div class="absolute bottom-3 right-4 font-mono text-mono-sm text-light-on-primary bg-light-primary/90 px-2 py-0.5 rounded">
+                CLAIM: VIRAL-CLIM-902
+              </div>
+            </div>
+
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-body-sm text-light-on-surface-variant font-mono mb-2">
+                  <span>TELEMETRY: ESA SENTINEL-1</span>
+                  <span class="text-verdict-false font-bold">FABRICATED DATA</span>
+                </div>
+                <h3 class="font-headline text-headline-sm text-light-on-surface mb-3 group-hover:text-verdict-false transition-colors">
+                  &#34;Viral Social Media Video Claims Antarctic Ice Shelf Grew by 12% in 2024&#34;
+                </h3>
+                <p class="font-body text-body-md text-light-on-surface-variant mb-4">
+                  Synthetic radar overlay was fabricated by recycling seasonal sea-ice boundary animations from 2011. Calving front velocity actual data shows a net loss of 143 gigatons.
+                </p>
+              </div>
+
+              <div class="pt-4 border-t border-light-outline/70 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-verdict-false/10 text-verdict-false flex items-center justify-center font-mono text-mono-sm font-bold">0</div>
+                  <span class="font-body text-body-sm text-light-on-surface-variant">Zero peer citations</span>
+                </div>
+                <button type="button" onclick="openEvidenceModal(&#39;climate&#39;)" class="font-label text-label-sm text-verdict-false flex items-center gap-1 font-semibold hover:underline">
+                  View Forensic Debunk <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Dossier 3: AI Compute (Needs Context / Disputed) -->
+          <article data-domain="ai" class="claim-card reveal-item bg-light-surface-container rounded-xl border border-light-outline overflow-hidden flex flex-col hover:border-light-primary transition-all duration-surface-enter shadow-sm hover:shadow-lg group">
+            <div class="relative h-56 overflow-hidden">
+              <img src="https://lh3.googleusercontent.com/aida/ALJJyrAumNrixaVf2G7p4qmi8BoY-I5Sw_KRY2uu1vqNzu06QLXyrWaqE955ZvYexHVUPCalUPwBMqxo7UIbfQ6BaGls62UetXUnQxFgnwGNThm07G7V4b-x46SMh-HVfi2SjVP1q5zmj9DTqyaH-e0IbuZ2tM49NrQTgn2487N7fCsRXp0WHzZtKWyyBCH7YwYqjRUx9Mf5J2fK5ISy2ZK_L1h7pgqTzcCUodCgQH9Bet9ZpS3xljrBrE7tEeUn" alt="Neural Network Vector Graph" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+              <div class="absolute top-4 left-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-light-surface text-verdict-uncertain font-label text-label-sm border border-verdict-uncertain shadow-sm">
+                  <span class="material-symbols-outlined text-base">help_outline</span>
+                  <span class="font-bold">DISPUTED METRIC</span>
+                </span>
+              </div>
+              <div class="absolute bottom-3 right-4 font-mono text-mono-sm text-light-on-primary bg-light-primary/90 px-2 py-0.5 rounded">
+                ARXIV:2409.00412
+              </div>
+            </div>
+
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-body-sm text-light-on-surface-variant font-mono mb-2">
+                  <span>BENCHMARK: MATH-500</span>
+                  <span class="text-verdict-uncertain font-bold">METHOD CONTESTED</span>
+                </div>
+                <h3 class="font-headline text-headline-sm text-light-on-surface mb-3 group-hover:text-verdict-uncertain transition-colors">
+                  Autonomous Code Reasoning Gains are 100% Attributed to Data Contamination
+                </h3>
+                <p class="font-body text-body-md text-light-on-surface-variant mb-4">
+                  Stanford and EPFL independent test suites indicate partial memorization on HumanEval, but novel synthetic reasoning holdouts confirm genuine out-of-distribution transfer.
+                </p>
+              </div>
+
+              <div class="pt-4 border-t border-light-outline/70 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-verdict-uncertain/10 text-verdict-uncertain flex items-center justify-center font-mono text-mono-sm font-bold">5</div>
+                  <span class="font-body text-body-sm text-light-on-surface-variant">Active rebuttals</span>
+                </div>
+                <button type="button" onclick="openEvidenceModal(&#39;ai&#39;)" class="font-label text-label-sm text-light-primary flex items-center gap-1 font-semibold hover:underline">
+                  Cross-Examine <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Claim Verification Registry & Live Data Table -->
+    <section id="claim-registry" class="py-16 md:py-24 border-b border-light-outline/70 bg-light-surface">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div class="flex flex-col gap-1">
+            <span class="font-mono text-mono-sm text-verdict-science font-semibold tracking-wider uppercase">Public Audit Ledger</span>
+            <h2 class="font-headline text-headline-lg text-light-primary">
+              Active Claim Verification Registry
+            </h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-body-sm text-light-on-surface-variant">Showing 4 of 18,940 verified statements today</span>
+            <button type="button" class="px-3 py-1.5 rounded bg-light-surface-container border border-light-outline font-label text-label-sm hover:border-light-primary transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-base">tune</span> Filter
+            </button>
+          </div>
+        </div>
+
+        <!-- Structured Editorial Data Table -->
+        <div class="bg-light-surface-container rounded-xl border border-light-outline overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-light-outline text-label-sm font-label text-light-on-surface-variant bg-light-surface-container-high/50 uppercase tracking-wider">
+                  <th class="py-4 px-6">Assertion / Paper Title</th>
+                  <th class="py-4 px-4">Subject Domain</th>
+                  <th class="py-4 px-4">Consensus Status</th>
+                  <th class="py-4 px-4 font-mono">Sample Size</th>
+                  <th class="py-4 px-4 font-mono">Confidence</th>
+                  <th class="py-4 px-6 text-right">Audit Dossier</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-light-outline/60 text-body-md">
+                
+                <tr class="hover:bg-light-surface/60 transition-colors">
+                  <td class="py-4 px-6 max-w-md">
+                    <div class="font-headline font-semibold text-light-on-surface">Whole-genome sequencing reduces diagnostic latency in pediatric rare disease by 72%</div>
+                    <div class="font-mono text-mono-sm text-light-on-surface-variant mt-0.5">PMID: 39014582 • NEJM</div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <span class="px-2.5 py-1 rounded bg-verdict-science/10 text-verdict-science font-mono text-mono-sm font-semibold">Genomics</span>
+                  </td>
+                  <td class="py-4 px-4">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-light-surface text-verdict-true font-label text-label-sm font-bold border border-verdict-true">
+                      <span class="material-symbols-outlined text-base">verified</span> Corroborated
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 font-mono text-mono-sm">n = 4,210</td>
+                  <td class="py-4 px-4 font-mono text-mono-sm font-bold text-verdict-true">99.4%</td>
+                  <td class="py-4 px-6 text-right">
+                    <button type="button" class="text-label-sm font-label text-light-primary hover:underline font-semibold whitespace-nowrap">View Case</button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-light-surface/60 transition-colors">
+                  <td class="py-4 px-6 max-w-md">
+                    <div class="font-headline font-semibold text-light-on-surface">&#34;Microplastic particles in bottled water cross the blood-brain barrier within 2 hours&#34;</div>
+                    <div class="font-mono text-mono-sm text-light-on-surface-variant mt-0.5">Viral claim originating on TikTok &amp; X</div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <span class="px-2.5 py-1 rounded bg-verdict-uncertain/10 text-verdict-uncertain font-mono text-mono-sm font-semibold">Toxicology</span>
+                  </td>
+                  <td class="py-4 px-4">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-light-surface text-verdict-uncertain font-label text-label-sm font-bold border border-verdict-uncertain">
+                      <span class="material-symbols-outlined text-base">help_outline</span> In Vitro Only
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 font-mono text-mono-sm">n = Rodent only</td>
+                  <td class="py-4 px-4 font-mono text-mono-sm font-bold text-verdict-uncertain">42.1%</td>
+                  <td class="py-4 px-6 text-right">
+                    <button type="button" class="text-label-sm font-label text-light-primary hover:underline font-semibold whitespace-nowrap">View Case</button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-light-surface/60 transition-colors">
+                  <td class="py-4 px-6 max-w-md">
+                    <div class="font-headline font-semibold text-light-on-surface">Solid-state electrolyte battery retains 90% capacity after 3,000 fast-charge cycles</div>
+                    <div class="font-mono text-mono-sm text-light-on-surface-variant mt-0.5">Corporate Press Release • Dec 2024</div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <span class="px-2.5 py-1 rounded bg-light-primary/10 text-light-primary font-mono text-mono-sm font-semibold">Clean Tech</span>
+                  </td>
+                  <td class="py-4 px-4">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-light-surface text-light-on-surface-variant font-label text-label-sm font-bold border border-light-outline">
+                      <span class="material-symbols-outlined text-base">pending</span> Audit Active
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 font-mono text-mono-sm">12 pouch cells</td>
+                  <td class="py-4 px-4 font-mono text-mono-sm font-bold text-light-on-surface-variant">Pending</td>
+                  <td class="py-4 px-6 text-right">
+                    <button type="button" class="text-label-sm font-label text-light-primary hover:underline font-semibold whitespace-nowrap">Track Test</button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-light-surface/60 transition-colors">
+                  <td class="py-4 px-6 max-w-md">
+                    <div class="font-headline font-semibold text-light-on-surface">&#34;Global sea levels dropped in 2023 due to increased inland precipitation retention&#34;</div>
+                    <div class="font-mono text-mono-sm text-light-on-surface-variant mt-0.5">Social Commentary / Blogosphere</div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <span class="px-2.5 py-1 rounded bg-verdict-false/10 text-verdict-false font-mono text-mono-sm font-semibold">Geosciences</span>
+                  </td>
+                  <td class="py-4 px-4">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-light-surface text-verdict-false font-label text-label-sm font-bold border border-verdict-false">
+                      <span class="material-symbols-outlined text-base">cancel</span> Refuted
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 font-mono text-mono-sm">Global Tide Gauges</td>
+                  <td class="py-4 px-4 font-mono text-mono-sm font-bold text-verdict-false">0.0%</td>
+                  <td class="py-4 px-6 text-right">
+                    <button type="button" class="text-label-sm font-label text-verdict-false hover:underline font-semibold whitespace-nowrap">Debunk Summary</button>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Methodology & Editorial Board: Trust Architecture -->
+    <section id="methodology" class="py-16 md:py-24 border-b border-light-outline/70">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <div class="lg:col-span-5 flex flex-col gap-6">
+            <div class="flex flex-col gap-2">
+              <span class="font-mono text-mono-sm text-verdict-science font-semibold tracking-wider uppercase">Scientific Transparency Protocol</span>
+              <h2 class="font-headline text-headline-lg text-light-primary">
+                How Veritas Verifies Any Claim in Seconds.
+              </h2>
+            </div>
+            
+            <div class="space-y-6">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-light-primary text-light-on-primary flex items-center justify-center font-mono font-bold text-headline-sm shrink-0">
+                  01
+                </div>
+                <div>
+                  <h3 class="font-headline text-headline-sm text-light-on-surface">Semantic Claim Deconstruction</h3>
+                  <p class="font-body text-body-md text-light-on-surface-variant mt-1">
+                    Every viral quote, paper title, or assertion is broken down into falsifiable scientific propositions with explicit effect size bounds.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-verdict-science text-light-on-primary flex items-center justify-center font-mono font-bold text-headline-sm shrink-0">
+                  02
+                </div>
+                <div>
+                  <h3 class="font-headline text-headline-sm text-light-on-surface">Dual Cross-Validation Matrix</h3>
+                  <p class="font-body text-body-md text-light-on-surface-variant mt-1">
+                    Automated crawling cross-examines citations across PubMed, Cochrane Library, arXiv preprints, FDA clinical trial disclosures, and raw datasets.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-verdict-true text-light-on-primary flex items-center justify-center font-mono font-bold text-headline-sm shrink-0">
+                  03
+                </div>
+                <div>
+                  <h3 class="font-headline text-headline-sm text-light-on-surface">Triple-Blind Expert Review</h3>
+                  <p class="font-body text-body-md text-light-on-surface-variant mt-1">
+                    A network of accredited faculty researchers independently audits automated verdicts prior to public immutable dossier publishing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editorial Board Quote Card with Portrait -->
+          <div class="lg:col-span-7">
+            <div class="bg-light-surface-container rounded-2xl border border-light-outline p-8 md:p-10 relative shadow-lg">
+              <span class="material-symbols-outlined text-display-lg text-light-outline/40 absolute top-6 right-6">format_quote</span>
+              
+              <div class="flex items-center gap-4 mb-6">
+                <img src="https://lh3.googleusercontent.com/aida/ALJJyrAxkoudHkEPU2gwy9mymy-3yvuXVq98gB2QErx7AH9AErqWuNr7bhk4gmdURIAacpWXotYlHMUxMz6q72CNe-EaMD7wuqLFnakJmz-nJT8Li1PAVepC4voFjUYqiPYnQsiH3e1zOhdRh8EAZjG_W0rV1_kQajIU5kGF6rYV9sgQuAeoh-HnCZYv3X1SfCFAg6qguWtkgoBDUqGkRbW572GcyoDTO55bY-hB8mtdq96IWWGChauN" alt="Dr. Alistair Vance, Editor in Chief" class="w-16 h-16 rounded-full object-cover border-2 border-light-primary shadow-sm">
+                <div>
+                  <div class="font-headline font-bold text-headline-sm text-light-on-surface">Dr. Alistair Vance, MD, PhD</div>
+                  <div class="font-body text-body-sm text-light-on-surface-variant">Editor-in-Chief • Former Oxford Clinical Fellow</div>
+                </div>
+              </div>
+
+              <blockquote class="font-headline italic text-headline-sm md:text-headline-md text-light-primary mb-6 leading-relaxed">
+                &#34;In an era where synthetic disinformation spreads six times faster than peer-reviewed truth, verifiable citations must be as effortless, delightful, and immediate as reading the morning paper.&#34;
+              </blockquote>
+
+              <div class="pt-6 border-t border-light-outline flex flex-wrap items-center justify-between gap-4 font-mono text-mono-sm text-light-on-surface-variant">
+                <span>VERITAS EDITORIAL BOARD STATEMENT • ISSUE 24</span>
+                <span class="text-verdict-science font-semibold">ISSN 2819-0941</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Kinetic Newsletter & Fact Alert Call to Action -->
+    <section class="py-16 md:py-20 bg-light-primary text-light-on-primary">
+      <div class="max-w-4xl mx-auto px-6 text-center flex flex-col items-center gap-4">
+        <span class="font-mono text-mono-sm text-light-surface font-semibold uppercase tracking-widest opacity-90">Never fall for fabricated assertions</span>
+        <h2 class="font-headline text-headline-lg-mobile md:text-headline-lg text-light-on-primary">
+          Receive Verified Research Dossiers Every Friday.
+        </h2>
+        <p class="font-body text-body-lg text-light-on-primary/80 max-w-xl mx-auto mb-4">
+          Curated fact-checks, peer-reviewed clinical breakthroughs, and methodologies vetted by active academic researchers.
+        </p>
+
+        <form onsubmit="handleSubscribe(event)" class="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-lg mx-auto">
+          <input type="email" required placeholder="Enter institutional or personal email..." class="w-full sm:w-80 px-4 py-3 rounded-DEFAULT bg-light-surface text-light-on-surface placeholder:text-light-on-surface-variant/60 font-body text-body-md focus:outline-none focus:ring-2 focus:ring-light-outline">
+          <button type="submit" class="w-full sm:w-auto px-6 py-3 rounded-DEFAULT bg-light-surface text-light-primary font-label text-label-lg hover:bg-light-surface-container active:scale-95 transition-all shadow-md cursor-pointer font-bold whitespace-nowrap">
+            Subscribe to Dossier
+          </button>
+        </form>
+
+        <div class="text-body-sm text-light-on-primary/70 font-mono">
+          Free academic open-access • Unsubscribe anytime
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Editorial Colophon Footer -->
+  <footer class="bg-light-surface-container border-t border-light-outline py-12 text-light-on-surface">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-7 h-7 rounded-full bg-light-primary text-light-on-primary flex items-center justify-center font-headline font-bold text-headline-sm">V</span>
+            <span class="font-headline font-bold text-headline-sm tracking-tight">VERITAS</span>
+          </div>
+          <p class="font-body text-body-md text-light-on-surface-variant max-w-sm">
+            An independent research institute and public-interest editorial consortium dedicated to claim verification, academic integrity, and scientific literacy.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-label text-label-sm font-semibold uppercase tracking-wider text-light-on-surface mb-4">Research Repositories</h4>
+          <ul class="space-y-2 text-body-sm text-light-on-surface-variant">
+            <li><a href="#" class="hover:text-light-primary transition-colors">Clinical Trial Registry</a></li>
+            <li><a href="#" class="hover:text-light-primary transition-colors">Preprint Watch Ledger</a></li>
+            <li><a href="#" class="hover:text-light-primary transition-colors">Replication Benchmark</a></li>
+            <li><a href="#" class="hover:text-light-primary transition-colors">Conflict of Interest Disclosures</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-label text-label-sm font-semibold uppercase tracking-wider text-light-on-surface mb-4">Standards &amp; Legal</h4>
+          <ul class="space-y-2 text-body-sm text-light-on-surface-variant">
+            <li><a href="#" class="hover:text-light-primary transition-colors">Verification Methodology</a></li>
+            <li><a href="#" class="hover:text-light-primary transition-colors">Peer Review Board Code</a></li>
+            <li><a href="#" class="hover:text-light-primary transition-colors">Data Provenance Guarantee</a></li>
+            <li><a href="#" class="hover:text-light-primary transition-colors">Correction Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-light-outline/70 flex flex-col md:flex-row items-center justify-between text-body-sm text-light-on-surface-variant">
+        <div>
+          © 2026 Veritas Research Consortium. Open-access under CC-BY 4.0 International.
+        </div>
+        <div class="flex items-center gap-4 mt-4 md:mt-0 font-mono text-mono-sm">
+          <span>LATENCY: 124MS</span>
+          <span>•</span>
+          <span>STATUS: ALL SYSTEMS NOMINAL</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Slide-out Modal / Drawer: Evidence Inspection Overlay -->
+  <div id="evidenceModal" class="fixed inset-0 z-50 hidden bg-light-primary/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-light-surface rounded-2xl border border-light-outline max-w-2xl w-full p-6 shadow-2xl relative">
+      <div class="flex items-start justify-between pb-4 border-b border-light-outline">
+        <div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-verdict-science/10 text-verdict-science font-mono text-mono-sm font-semibold">
+            PRIMARY CITATION MATRIX
+          </span>
+          <h3 id="modalTitle" class="font-headline text-headline-sm text-light-on-surface mt-1">
+            Forensic Cross-Examination Details
+          </h3>
+        </div>
+        <button type="button" onclick="closeEvidenceModal()" class="w-8 h-8 rounded-full hover:bg-light-surface-container flex items-center justify-center text-light-on-surface-variant cursor-pointer">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-4" id="modalBody">
+        <p class="font-body text-body-md text-light-on-surface-variant">
+          Loading primary evidence telemetry...
+        </p>
+      </div>
+
+      <div class="pt-4 border-t border-light-outline flex items-center justify-between">
+        <span class="font-mono text-mono-sm text-light-on-surface-variant">CRYPTOGRAPHIC HASH: e4b2..19f</span>
+        <button type="button" onclick="closeEvidenceModal()" class="px-4 py-2 rounded-DEFAULT bg-light-primary text-light-on-primary font-label text-label-sm cursor-pointer">
+          Close Inspection
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Client-side Scripting -->
+  <script>
+    // 1. Reading progress indicator
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) : 0;
+      const indicator = document.getElementById('scroll-indicator');
+      if (indicator) {
+        indicator.style.transform = `scaleX(${scrolled})`;
+      }
+
+      // 2. Scroll reveal trigger for cards
+      const reveals = document.querySelectorAll('.reveal-item');
+      reveals.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.88) {
+          el.classList.add('is-visible');
+        }
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const reveals = document.querySelectorAll('.reveal-item');
+        reveals.forEach(el => el.classList.add('is-visible'));
+      }, 100);
+    });
+
+    // 3. Fast sample queries in hero
+    function setQuery(text) {
+      const input = document.getElementById('claimInput');
+      if (input) {
+        input.value = text;
+        input.focus();
+      }
+    }
+
+    // 4. Interactive verification simulation
+    function handleVerification(e) {
+      e.preventDefault();
+      const btn = document.getElementById('verifyBtn');
+      const btnText = document.getElementById('btnText');
+      const panel = document.getElementById('auditResultPanel');
+      const meter = document.getElementById('confidenceMeter');
+
+      if (!btn || !panel) return;
+
+      btnText.textContent = "Auditing 42M Citations...";
+      btn.classList.add('opacity-75', 'pointer-events-none');
+
+      setTimeout(() => {
+        btnText.textContent = "Execute Multi-Source Audit";
+        btn.classList.remove('opacity-75', 'pointer-events-none');
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        let val = 40.0;
+        const target = 71.2;
+        const timer = setInterval(() => {
+          val += 2.1;
+          if (val >= target) {
+            val = target;
+            clearInterval(timer);
+          }
+          if (meter) meter.textContent = val.toFixed(1) + "%";
+        }, 30);
+      }, 700);
+    }
+
+    // 5. Interactive Domain Filtering
+    function filterClaims(domain, btnElement) {
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(b => {
+        b.classList.remove('bg-light-primary', 'text-light-on-primary');
+        b.classList.add('text-light-on-surface-variant');
+      });
+      if (btnElement) {
+        btnElement.classList.add('bg-light-primary', 'text-light-on-primary');
+        btnElement.classList.remove('text-light-on-surface-variant');
+      }
+
+      const cards = document.querySelectorAll('.claim-card');
+      cards.forEach(card => {
+        if (domain === 'all' || card.getAttribute('data-domain') === domain) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // 6. Evidence Inspection Modal Handlers
+    function openEvidenceModal(type) {
+      const modal = document.getElementById('evidenceModal');
+      const title = document.getElementById('modalTitle');
+      const body = document.getElementById('modalBody');
+      if (!modal || !title || !body) return;
+
+      if (type === 'cellular') {
+        title.textContent = "Longitudinal Autophagy Multi-Center Trial (N=12,450)";
+        body.innerHTML = `
+          <div class="space-y-3 font-body text-body-sm text-light-on-surface">
+            <p><strong>Primary Repository:</strong> ClinicalTrials.gov (NCT04891102)</p>
+            <p><strong>Methodology:</strong> Double-blind randomized crossover with continuous glucose monitoring and blood plasma mass spectrometry.</p>
+            <div class="p-3 bg-light-surface-container rounded border border-light-outline">
+              <span class="font-mono text-mono-sm text-verdict-true font-bold">KEY FINDING:</span>
+              <p class="mt-1">Microglial LC3-II / LC3-I autophagy conversion ratio elevated by 24.3% (p &lt; 0.001) with strict adherence to 16:8 protocol.</p>
+            </div>
+            <p class="text-light-on-surface-variant">Peer-reviewed by 6 independent neurologists with zero commercial sponsorship conflicts declared.</p>
+          </div>
+        `;
+      } else if (type === 'climate') {
+        title.textContent = "Satellite Telemetry Audit: Antarctic Ice Boundary";
+        body.innerHTML = `
+          <div class="space-y-3 font-body text-body-sm text-light-on-surface">
+            <p><strong>Telemetry Instrument:</strong> Copernicus Sentinel-1 Synthetic Aperture Radar (SAR).</p>
+            <p><strong>Forensic Finding:</strong> The video circulated on social platforms inverted the color palette of ice thickness maps and spliced 2011 winter accretion data into current 2024 reports.</p>
+            <div class="p-3 bg-light-surface rounded border border-verdict-false">
+              <span class="font-mono text-mono-sm text-verdict-false font-bold">FACT-CHECK CONCLUSION:</span>
+              <p class="mt-1">Claim of 12% ice growth is entirely fabricated. Grounded radar confirms ongoing annual net thinning of 1.2m/year along Pine Island Bay.</p>
+            </div>
+          </div>
+        `;
+      } else {
+        title.textContent = "LLM Benchmark Holdout Cross-Examination";
+        body.innerHTML = `
+          <div class="space-y-3 font-body text-body-sm text-light-on-surface">
+            <p><strong>Evaluated Papers:</strong> arXiv:2409.00412, Stanford CRFM Evaluation Suite.</p>
+            <p><strong>Dispute Context:</strong> While initial GSM8k training splits contained direct problem memorization, newly authored 2024 Putnam competition questions still show non-trivial step-by-step reasoning derivation.</p>
+            <div class="p-3 bg-light-surface rounded border border-verdict-uncertain">
+              <span class="font-mono text-mono-sm text-verdict-uncertain font-bold">VERITAS RULING:</span>
+              <p class="mt-1">Partially Supported. Benchmark contamination exists in earlier models, but emergent algorithmic reasoning remains partially validated.</p>
+            </div>
+          </div>
+        `;
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeEvidenceModal() {
+      const modal = document.getElementById('evidenceModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openClaimDrawer() {
+      const input = document.getElementById('claimInput');
+      if (input) {
+        input.scrollIntoView({ behavior: 'smooth' });
+        input.focus();
+      }
+    }
+
+    function handleSubscribe(e) {
+      e.preventDefault();
+      alert("Thank you. You have been subscribed to the Veritas Weekly Research & Fact Dossier.");
+    }
+  </script>
+
+
+</body></html>
