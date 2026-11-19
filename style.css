@@ -27,7 +27,7 @@
   --amber: #a26b28;
   --amber-soft: #fbf2df;
   --display-font: 'Exo 2', 'Space Grotesk', 'Segoe UI', sans-serif;
-  --sans: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --sans: 'Exo 2', 'Space Grotesk', 'Segoe UI', sans-serif;
 }
 
 * { box-sizing: border-box; }
