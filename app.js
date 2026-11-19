@@ -42,6 +42,7 @@
   const paperSearchQuery = document.getElementById('paper-search-query');
   const paperVoiceButton = document.getElementById('paper-voice-button');
   const paperSearchStatus = document.getElementById('paper-search-status');
+  const searchLoader = document.getElementById('search-loader');
   const paperSearchResults = document.getElementById('paper-search-results');
 
   let claims = [{ ...sampleClaim }];
@@ -483,12 +484,15 @@
   async function searchResearchPapers(rawQuery) {
     const query = rawQuery.trim();
     if (query.length < 2) {
+      paperSearchSequence += 1;
+      setSearchLoading(false);
       paperSearchStatus.textContent = 'Enter at least two characters to search.';
       paperSearchResults.replaceChildren();
       return;
     }
 
     const sequence = ++paperSearchSequence;
+    setSearchLoading(true);
     paperSearchStatus.textContent = `Searching Crossref and PMC for “${query}”…`;
     paperSearchResults.replaceChildren();
     const crossrefParameters = new URLSearchParams({
@@ -517,6 +521,7 @@
       } else {
         paperSearchStatus.textContent = `No papers found for “${query}”.${errors.length ? ` ${errors.join(' ')}` : ''}`;
       }
+      if (!pending) setSearchLoading(false);
     };
     const settleIndex = async (request, sourceName, onSuccess) => {
       try {
@@ -542,6 +547,67 @@
         (data) => { pmcWorks = data; }
       )
     ]);
+  }
+
+  function setSearchLoading(isLoading) {
+    searchLoader.hidden = !isLoading;
+    document.getElementById('research-browser').classList.toggle('is-searching', isLoading);
+  }
+
+  function initScrollStory() {
+    const revealTargets = document.querySelectorAll(
+      '.hero, .hero-note, .workspace-section, .research-browser, .workflow-section, .principles-section, .metric-card, .workflow-steps li, .principle-grid article'
+    );
+    const chapterLinks = [...document.querySelectorAll('[data-chapter]')];
+    const chapterTargets = chapterLinks
+      .map((link) => document.getElementById(link.dataset.chapter === 'home' ? 'home' : link.dataset.chapter))
+      .filter(Boolean);
+    const progressFill = document.getElementById('reading-progress-fill');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if ('IntersectionObserver' in window) {
+      if (!reducedMotion) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.12 });
+        revealTargets.forEach((target, index) => {
+          target.classList.add('scroll-reveal');
+          target.style.setProperty('--reveal-delay', `${(index % 4) * 70}ms`);
+          revealObserver.observe(target);
+        });
+        document.documentElement.classList.add('motion-ready');
+      }
+
+      const chapterObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top))[0];
+        if (!visible) return;
+        chapterLinks.forEach((link) => {
+          if (link.dataset.chapter === visible.target.id) link.setAttribute('aria-current', 'step');
+          else link.removeAttribute('aria-current');
+        });
+      }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+      chapterTargets.forEach((target) => chapterObserver.observe(target));
+    }
+
+    let updateScheduled = false;
+    const updateProgress = () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+      progressFill.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+      updateScheduled = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (updateScheduled) return;
+      updateScheduled = true;
+      window.requestAnimationFrame(updateProgress);
+    }, { passive: true });
+    updateProgress();
   }
 
   function setVoiceButtonState(listening) {
@@ -1097,5 +1163,6 @@
   });
   exportButton.addEventListener('click', exportReport);
 
+  initScrollStory();
   render();
 })();
