@@ -44,6 +44,11 @@
   const paperSearchStatus = document.getElementById('paper-search-status');
   const searchLoader = document.getElementById('search-loader');
   const paperSearchResults = document.getElementById('paper-search-results');
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeToggleLabel = document.getElementById('theme-toggle-label');
+  const moonIcon = themeToggle.querySelector('.theme-icon-moon');
+  const sunIcon = themeToggle.querySelector('.theme-icon-sun');
+  const themeColor = document.querySelector('meta[name="theme-color"]');
 
   let claims = [{ ...sampleClaim }];
   let selectedClaimId = sampleClaim.id;
@@ -55,6 +60,39 @@
   let speechRecognitionActive = false;
   let speechRecognitionStarting = false;
   let speechRecognitionMessage = '';
+
+  function setTheme(theme, persist = true) {
+    const isDark = theme === 'dark';
+    document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+    themeToggle.setAttribute('aria-pressed', String(isDark));
+    themeToggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} theme`);
+    themeToggle.title = `Switch to ${isDark ? 'light' : 'dark'} theme`;
+    themeToggleLabel.textContent = isDark ? 'Light' : 'Dark';
+    moonIcon.hidden = isDark;
+    sunIcon.hidden = !isDark;
+    themeColor.content = isDark ? '#100a13' : '#1d142a';
+
+    if (!persist) return;
+    try {
+      localStorage.setItem('citeverify-theme', isDark ? 'dark' : 'light');
+    } catch (error) {
+      console.warn('Could not save the selected theme preference.', error);
+    }
+  }
+
+  function initTheme() {
+    let savedTheme = 'light';
+    try {
+      const preference = localStorage.getItem('citeverify-theme');
+      if (preference === 'dark' || preference === 'light') savedTheme = preference;
+    } catch (error) {
+      console.warn('Could not read the saved theme preference.', error);
+    }
+    setTheme(savedTheme, false);
+    themeToggle.addEventListener('click', () => {
+      setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+  }
 
   function showToast(message) {
     toast.textContent = message;
@@ -1163,6 +1201,7 @@
   });
   exportButton.addEventListener('click', exportReport);
 
+  initTheme();
   initScrollStory();
   render();
 })();
