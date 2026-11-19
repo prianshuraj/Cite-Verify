@@ -2,7 +2,7 @@ name: Deploy CiteVerify to GitHub Pages
 
 on:
   push:
-    branches: [main, prianshuraj-faithful-pycloud-pages]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
