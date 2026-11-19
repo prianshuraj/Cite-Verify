@@ -927,3 +927,260 @@ html.motion-ready .hero.is-revealed { animation: chapter-arrive .8s cubic-bezier
     transition: none !important;
   }
 }
+
+.theme-toggle {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid #e6cddd;
+  border-radius: 6px;
+  background: #fff7fa;
+  color: #85417b;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.theme-toggle:hover { border-color: #d54b98; background: #fdeaf4; }
+.theme-toggle svg { width: 16px; height: 16px; }
+.theme-toggle svg[hidden] { display: none; }
+
+@media (max-width: 850px) {
+  .site-nav { gap: 15px; margin-left: 20px; }
+}
+
+@media (max-width: 650px) {
+  .site-nav a:last-child { display: none; }
+  .theme-toggle { width: 32px; min-height: 32px; padding: 0; }
+  .theme-toggle-label { display: none; }
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f8eaf1;
+  --muted: #c9adbd;
+  --paper: #191018;
+  --canvas: #0c080e;
+  --green: #ff65a8;
+  --green-dark: #ff91bf;
+  --green-soft: #3a1c2d;
+  --line: #4a2a3d;
+  --amber: #ffbd77;
+  --amber-soft: #3e2a21;
+}
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(ellipse at 9% 18%, rgb(183 29 92 / 20%), transparent 30rem),
+    radial-gradient(ellipse at 92% 61%, rgb(87 15 54 / 22%), transparent 34rem),
+    #0c080e;
+  color: var(--ink);
+}
+html[data-theme="dark"] .site-header {
+  border-bottom-color: #39212f;
+  background: rgb(12 8 14 / 94%);
+}
+html[data-theme="dark"] .brand { color: #fff1f7; }
+html[data-theme="dark"] .brand-symbol { color: #ff65a8; }
+html[data-theme="dark"] .site-nav a,
+html[data-theme="dark"] .site-footer > a:last-child { color: #e0c3d2; }
+html[data-theme="dark"] .site-nav a:hover,
+html[data-theme="dark"] .site-footer > a:last-child:hover { color: #ff8fbd; }
+html[data-theme="dark"] .header-action {
+  border-color: #573048;
+  background: #21121e;
+  color: #ffe6f0;
+}
+html[data-theme="dark"] .header-action:hover { border-color: #d94d8c; background: #301627; }
+html[data-theme="dark"] .status-dot,
+html[data-theme="dark"] .chip-dot,
+html[data-theme="dark"] .summary-dot { background: #ff74ae; }
+html[data-theme="dark"] .hero {
+  border-color: rgb(255 101 168 / 35%);
+  background: linear-gradient(116deg, #100a13 0%, #27101f 55%, #501b38 100%);
+  box-shadow: 0 20px 48px rgb(0 0 0 / 40%);
+}
+html[data-theme="dark"] .hero::before {
+  border-color: rgb(255 101 168 / 18%);
+  background: radial-gradient(circle, rgb(255 95 158 / 17%), rgb(53 217 213 / 5%) 46%, transparent 70%);
+}
+html[data-theme="dark"] .hero-note {
+  border-color: rgb(255 255 255 / 18%);
+  background: rgb(12 8 14 / 68%);
+}
+html[data-theme="dark"] .workspace-section,
+html[data-theme="dark"] .research-browser {
+  border-color: #48283b;
+  background: #171018;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 28%);
+}
+html[data-theme="dark"] .section-heading h2,
+html[data-theme="dark"] .card-title-row h3,
+html[data-theme="dark"] .report-header h3,
+html[data-theme="dark"] .research-browser-heading h2,
+html[data-theme="dark"] .workflow-heading h2 { color: #f8eaf1; }
+html[data-theme="dark"] .section-heading .eyebrow,
+html[data-theme="dark"] .research-browser-heading .eyebrow { color: #f08bb7; }
+html[data-theme="dark"] .document-chip { border-color: #4a2b3e; background: #21141f; color: #e2cbd8; }
+html[data-theme="dark"] .document-icon { color: #ff73ad; }
+html[data-theme="dark"] .metric-card { border-color: #402638; background: linear-gradient(145deg, #241822, #1d121b); }
+html[data-theme="dark"] .metric-icon-ink { background: #392638; color: #f0add0; }
+html[data-theme="dark"] .metric-icon-green { background: #3a1c2d; color: #ff81b7; }
+html[data-theme="dark"] .metric-icon-amber { background: #3c2b21; color: #ffc184; }
+html[data-theme="dark"] .metric-card p,
+html[data-theme="dark"] .metric-detail,
+html[data-theme="dark"] .prototype-notice p { color: #c5aebc; }
+html[data-theme="dark"] .metric-card strong { color: #fff0f7; }
+html[data-theme="dark"] .prototype-notice { border-color: #573047; background: #21141e; }
+html[data-theme="dark"] .notice-symbol { border-color: #e76d9f; color: #ff9ac4; }
+html[data-theme="dark"] .prototype-notice strong { color: #ffadd0; }
+html[data-theme="dark"] .upload-card,
+html[data-theme="dark"] .report-card { border-color: #45293b; }
+html[data-theme="dark"] .upload-card { background: #20131e; }
+html[data-theme="dark"] .report-card,
+html[data-theme="dark"] .claim-detail { background: #191018; }
+html[data-theme="dark"] .card-kicker { color: #d887ad; }
+html[data-theme="dark"] .step-number { color: #70415b; }
+html[data-theme="dark"] .upload-description,
+html[data-theme="dark"] .privacy-note { color: #c0a9b8; }
+html[data-theme="dark"] .drop-zone { border-color: #a44470; background: #170f16; color: #ffadd0; }
+html[data-theme="dark"] .drop-zone:hover,
+html[data-theme="dark"] .drop-zone.is-dragging { border-color: #ff65a8; background: #2a1422; }
+html[data-theme="dark"] .upload-icon { background: #3a1c2d; color: #ff8cbb; }
+html[data-theme="dark"] .upload-divider { color: #c59eb3; }
+html[data-theme="dark"] .upload-divider::before,
+html[data-theme="dark"] .upload-divider::after { background: #47293b; }
+html[data-theme="dark"] .input-label,
+html[data-theme="dark"] .review-select-label { color: #e3c9d7; }
+html[data-theme="dark"] .document-text,
+html[data-theme="dark"] .review-select,
+html[data-theme="dark"] .status-filter,
+html[data-theme="dark"] .paper-search-form input {
+  border-color: #503045;
+  background: #120d13;
+  color: #f8eaf1;
+}
+html[data-theme="dark"] .document-text::placeholder,
+html[data-theme="dark"] .paper-search-form input::placeholder { color: #a68b9b; }
+html[data-theme="dark"] .document-text:focus-visible,
+html[data-theme="dark"] .paper-search-form input:focus-visible { outline-color: #ff72ad; }
+html[data-theme="dark"] .primary-button {
+  background: linear-gradient(105deg, #c82b78, #8e267b);
+  box-shadow: 0 5px 15px rgb(0 0 0 / 28%);
+}
+html[data-theme="dark"] .primary-button:hover { background: linear-gradient(105deg, #e13d8e, #a83291); }
+html[data-theme="dark"] .sample-button,
+html[data-theme="dark"] .privacy-note span { color: #ff8fbd; }
+html[data-theme="dark"] .sample-button:hover { color: #ffc0dc; }
+html[data-theme="dark"] .report-header,
+html[data-theme="dark"] .detail-review,
+html[data-theme="dark"] .report-footnote { border-color: #3e2638; }
+html[data-theme="dark"] .export-button,
+html[data-theme="dark"] .paper-result-link {
+  border-color: #58334b;
+  background: #251521;
+  color: #ffacd0;
+}
+html[data-theme="dark"] .export-button:hover,
+html[data-theme="dark"] .paper-result-link:hover { background: #35192a; }
+html[data-theme="dark"] .report-summary { background: #23141f; }
+html[data-theme="dark"] .report-summary p,
+html[data-theme="dark"] .claim-list-heading,
+html[data-theme="dark"] .detail-label,
+html[data-theme="dark"] .detail-block-label,
+html[data-theme="dark"] .review-select-label,
+html[data-theme="dark"] .report-footnote { color: #c5aebd; }
+html[data-theme="dark"] .summary-label { color: #ffc184; }
+html[data-theme="dark"] .claim-list-panel { border-color: #3e2638; }
+html[data-theme="dark"] .claim-list-heading { border-color: #3e2638; }
+html[data-theme="dark"] .claim-list-item { border-color: #352233; background: #191018; }
+html[data-theme="dark"] .claim-list-item:hover { background: #241520; }
+html[data-theme="dark"] .claim-list-item[aria-current="true"] { border-left-color: #ff65a8; background: #2b1724; }
+html[data-theme="dark"] .claim-list-item p,
+html[data-theme="dark"] .claim-detail h4 { color: #f2dfe9; }
+html[data-theme="dark"] .claim-list-meta > span:last-child,
+html[data-theme="dark"] .confidence-label,
+html[data-theme="dark"] .illustrative-label,
+html[data-theme="dark"] .evidence-source,
+html[data-theme="dark"] .review-state,
+html[data-theme="dark"] .empty-filter { color: #bea8b7; }
+html[data-theme="dark"] .status-needs-review { background: #3d2b20; color: #ffd08c; }
+html[data-theme="dark"] .status-partly-supported { background: #392139; color: #e5a5e1; }
+html[data-theme="dark"] .status-supported { background: #19372c; color: #9ce0b5; }
+html[data-theme="dark"] .status-unsupported,
+html[data-theme="dark"] .status-contradictory { background: #3e2027; color: #ffadb6; }
+html[data-theme="dark"] .status-outdated { background: #242a43; color: #b7c5ff; }
+html[data-theme="dark"] .citation-box { border-color: #432b3d; background: #21151e; color: #dfc7d5; }
+html[data-theme="dark"] .citation-link,
+html[data-theme="dark"] .citation-line > strong { color: #ff8cbb; }
+html[data-theme="dark"] .evidence-box { border-left-color: #dc6096; background: #241722; color: #e5d1dc; }
+html[data-theme="dark"] .source-results { border-color: #344c43; background: #15211d; }
+html[data-theme="dark"] .source-results-heading,
+html[data-theme="dark"] .source-abstract summary { color: #8be0c4; }
+html[data-theme="dark"] .source-result h5,
+html[data-theme="dark"] .paper-result h3 { color: #f8eaf1; }
+html[data-theme="dark"] .source-result-meta,
+html[data-theme="dark"] .source-result-abstract,
+html[data-theme="dark"] .paper-result-meta { color: #cbb6c3; }
+html[data-theme="dark"] .source-search-error { color: #ffc0aa; }
+html[data-theme="dark"] .save-review-button { background: #214237; color: #a5e8d2; }
+html[data-theme="dark"] .save-review-button:hover { background: #2d594a; }
+html[data-theme="dark"] .research-browser-heading > div > p:last-child,
+html[data-theme="dark"] .paper-search-status,
+html[data-theme="dark"] .research-browser-note { color: #c3adbb; }
+html[data-theme="dark"] .research-browser-mark,
+html[data-theme="dark"] .paper-voice-button,
+html[data-theme="dark"] .research-browser-sources span {
+  border-color: #56334a;
+  background: #251521;
+  color: #ff9ac4;
+}
+html[data-theme="dark"] .paper-voice-button:hover { border-color: #ff65a8; background: #35192a; }
+html[data-theme="dark"] .research-browser-sources span { color: #d4b8c8; }
+html[data-theme="dark"] .paper-result { border-color: #442a3b; background: #20141d; }
+html[data-theme="dark"] .paper-result-source { color: #c3adbb; }
+html[data-theme="dark"] .paper-access-badge { background: #3d2b20; color: #ffd08c; }
+html[data-theme="dark"] .paper-access-badge.is-open { background: #19372c; color: #9ce0b5; }
+html[data-theme="dark"] .paper-result-link.is-download { border-color: #346253; background: #172a25; color: #a5e8d2; }
+html[data-theme="dark"] .paper-result-link.is-download:hover { border-color: #54b894; background: #204036; }
+html[data-theme="dark"] .workflow-heading > p,
+html[data-theme="dark"] .workflow-steps p { color: #c5aebd; }
+html[data-theme="dark"] .workflow-steps li { border-top-color: #593047; }
+html[data-theme="dark"] .workflow-steps li:not(:last-child)::after { border-color: #e65d9c; background: #0c080e; }
+html[data-theme="dark"] .workflow-steps li > span,
+html[data-theme="dark"] .principle-grid article > span { color: #ff7fb4; }
+html[data-theme="dark"] .workflow-steps strong { color: #f1dce7; }
+html[data-theme="dark"] .principles-section {
+  border-color: #573047;
+  background: linear-gradient(115deg, #100a13, #27101f 72%, #42162f);
+}
+html[data-theme="dark"] .principles-intro h2 { color: #fff0f7; }
+html[data-theme="dark"] .principles-intro > p:last-child,
+html[data-theme="dark"] .principle-grid p { color: #d7c1ce; }
+html[data-theme="dark"] .principle-grid h3 { color: #ffacd0; }
+html[data-theme="dark"] .site-footer { border-top-color: #39212f; background: #0c080e; }
+html[data-theme="dark"] .footer-brand { color: #fff1f7; }
+html[data-theme="dark"] .site-footer p { color: #c4aebe; }
+html[data-theme="dark"] .toast { border-color: #583149; background: #1b1019; color: #ffb4d2; }
+html[data-theme="dark"] .chapter-rail a {
+  border-color: #543148;
+  background: rgb(23 13 21 / 90%);
+  color: #d9b8ca;
+}
+html[data-theme="dark"] .chapter-rail a[aria-current="step"] {
+  border-color: #ff65a8;
+  background: #c82b78;
+  color: #fff;
+}
+html[data-theme="dark"] .reading-progress { background: rgb(10 6 11 / 65%); }
+html[data-theme="dark"] .theme-toggle {
+  border-color: #573048;
+  background: #21121e;
+  color: #ffc0dc;
+}
+html[data-theme="dark"] .theme-toggle:hover { border-color: #ff65a8; background: #301627; }
+html[data-theme="dark"] button:focus-visible,
+html[data-theme="dark"] a:focus-visible,
+html[data-theme="dark"] select:focus-visible,
+html[data-theme="dark"] textarea:focus-visible { outline-color: #ff84b4; }
